@@ -15,6 +15,14 @@
 import streamlit as st
 from streamlit.logger import get_logger
 
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+import function as func
+
+
+
 LOGGER = get_logger(__name__)
 
 
@@ -24,6 +32,17 @@ def run():
         page_icon="👋",
     )
 
+    r, am, bm, ah, bh, mu, nu, Thm, Tmh  = 0.01, 0.01,0.02, 0.03, 0.02, 0.01,0.01, 0.2,0.1
+
+    y0 = [2, 100, 100, 0, 0]
+    t = np.linspace(0, 10, 101)
+    print(y0)
+    sol = odeint(func.ModelMalaria, y0, t, args=(r, am, bm, ah, bh, mu, nu, Thm, Tmh))
+    fig, ax = plt.subplots()
+    for i in [0,1,2,3,4]:
+        ax.plot(t, sol[:, 0], 'b', label='theta(t)')
+    
+    st.pyplot(fig)
     st.write("# Welcome to Streamlit! 👋")
 
     st.sidebar.success("Select a demo above.")
