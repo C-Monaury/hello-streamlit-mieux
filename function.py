@@ -1,7 +1,9 @@
 
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
+
 
 def ModelMalaria(y,t, r, am, bm, ah, bh, mu, nu,Thm, Tmh): 
   Sm, Im, Sh, Ih, Rh = y
