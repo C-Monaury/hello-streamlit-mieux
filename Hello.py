@@ -34,6 +34,7 @@ def run():
     st.write("""
     ## Présentation du modèle de MacDonald:
     """)
+    
     #équation Homme 
     st.latex(r'''
              Homme
@@ -46,6 +47,7 @@ def run():
    \right.
              ''' 
     )
+    #Equation moustique
     st.latex(r'''
              Moustique
     \left  \{
@@ -57,7 +59,16 @@ def run():
              ''' 
     )
     
-    
+    st.graphviz_chart('''
+    digraph {
+        Homme_sain -> Homme_Malade
+        Homme_Malade -> Homme_Mort
+        Moustique_Sain -> Moustique_Malade
+        Homme_Malade -> Moustique_Sain 
+        Moustique_Malade -> Homme_sain
+        
+    }
+''')
     
     
     
@@ -90,27 +101,7 @@ def run():
                  label='theta(t)')
     
     st.pyplot(fig)
-    st.write("# Welcome to Streamlit! 👋")
-
-    st.sidebar.success("Select a demo above.")
-
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
+    
 
 
 if __name__ == "__main__":
