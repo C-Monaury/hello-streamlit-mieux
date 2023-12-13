@@ -28,12 +28,56 @@ LOGGER = get_logger(__name__)
 
 def run():
     st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
+        page_title="Modèle de MacDonald",
+        page_icon=":mosquito:",
     )
-   
+    st.write("""
+    ## Présentation du modèle de MacDonald:
+    """)
+    #équation Homme 
+    st.latex(r'''
+             Homme
+    \left  \{
+    \begin{array}{r c l}
+      S_H  & = & a_H*N_H - b_H*S_H - r*T_H*S_H*I_M \\
+      I_H   & = & r*T_H*S_H*I_M - (b + \mu + \nu)*I_H \\
+      R_H & = & \nu*I_H-b_H*R_H
+   \end{array}
+   \right.
+             ''' 
+    )
+    st.latex(r'''
+             Moustique
+    \left  \{
+    \begin{array}{r c l}
+      S_M  & = & a_M*N_M - b_M*S_M - r*T_M*S_M*I_H \\
+      I_M   & = & r*T_M*S_M*I_H - b_M*I_M \\
+   \end{array}
+   \right.
+             ''' 
+    )
+    
+    
+    
+    
+    
+    
+    
     r, am, bm, ah, bh, mu, nu, Thm, Tmh  = 0.01, 0.01,0.02, 0.03, 0.02, 0.01,0.01, 0.2,0.1
-    Thm =st.slider('Transmision homme moustique', min_value=0.01, max_value=0.99)
+    
+    st.subheader("Paramètres Homme")
+    l1col1 ,l1col2 ,l1col3 = st.columns(3)
+    
+    with l1col1:
+      Thm =st.slider('Transmision Homme moustique', min_value=0.01, max_value=0.99)
+      
+    with l1col2:
+      ah =st.slider('Taux de croissance Homme', min_value=0.01, max_value=0.99)
+      
+    with l1col3:
+      bh =st.slider('Taux de mortalité ', min_value=0.01, max_value=0.99)
+    
+    
     y0 = [2, 100, 100, 0, 0]
     t = np.linspace(0, 100, 1001)
     
