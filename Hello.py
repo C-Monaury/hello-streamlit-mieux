@@ -265,9 +265,11 @@ def run():
     ax3d.set_xlabel(f'Humain {names_comp[ID]}')
     ax3d.set_ylabel('Humain infecter')
     ax3d.set_zlabel('Moustique infecter')
-    
-    elev = st.slider('elevation', min_value=-90, max_value=90, value = 20)
-    azim = st.slider('azimute', min_value=-90, max_value=90, value = -35)
+    l3col1 ,l3col2  = st.columns(2)
+    with l3col1:
+        elev = st.slider('elevation', min_value=-90, max_value=90, value = 20)
+    with l3col2:
+        azim = st.slider('azimute', min_value=-90, max_value=90, value = -35)
     
     ax3d.view_init(elev=elev, azim=azim)
     st.pyplot(fig3d)
