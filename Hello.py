@@ -106,7 +106,7 @@ def run():
     
     
     
-    r, am, bm, ah, bh, mu, nu, Thm, Tmh  = 0.01, 0.01,0.01, 0.03, 0.02, 0.01,0.01, 0.2,0.1
+    r, am, bm, ah, bh, mu, nu, Thm, Tmh  = 0.01, 0.1,0.1, 0.02, 0.02, 0.01,0.01, 0.2,0.1
     
     st.subheader("Paramètres Homme")
     l1col1 ,l1col2 ,l1col3 = st.columns(3)
@@ -115,19 +115,19 @@ def run():
       Thm =st.slider('Transmision Homme moustique', min_value=0.01, max_value=0.99)
       
     with l1col2:
-      ah =st.slider('Taux de croissance Homme', min_value=0.01, max_value=0.99)
+      Tmh =st.slider('Transmission Moustique Homme', min_value=0.01, max_value=0.99)
       
     with l1col3:
-      bh =st.slider('Taux de mortalité ', min_value=0.01, max_value=0.99)
+      mu =st.slider('Mortalité de la malaria ', min_value=0.01, max_value=0.99)
     
     
-    y0 = [2, 100, 100, 0, 0]
+    y0 = [1000, 10, 100, 0, 0]
     t = np.linspace(0, 100, 1001)
     
 
     sol = odeint(func.ModelMalaria, y0, t, args=(r, am, bm, ah, bh, mu, nu, Thm, Tmh))
     fig, ax = plt.subplots()
-    col = ["cornflowerblue", "crimson", "royalblue","firebrick","gray" ]
+    col = ["springgreen", "lightcoral", "forestgreen","firebrick","royalblue" ]
     for i,c in zip([0,1,2,3,4],col) :
         ax.plot(t, sol[:, i], color = c,
                  label='theta(t)')
