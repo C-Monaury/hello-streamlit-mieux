@@ -34,6 +34,10 @@ def run():
     st.write("""
     ## Présentation du modèle de MacDonald:
     """)
+ #   st.write("""
+ #   Le modele de MacDonald...
+ #  """)
+    
     
     #équation Homme 
     st.latex(r'''
@@ -126,25 +130,45 @@ def run():
     
 
     sol = odeint(func.ModelMalaria, y0, t, args=(r, am, bm, ah, bh, mu, nu, Thm, Tmh))
-    fig, ax1 = plt.subplots()
-    ax2 = ax1.twinx()
-    ax1.plot(t,sol[:,0],'g--',label="Moustiques sains")
-    ax1.plot(t,sol[:,1],'r--',label="Moustiques infectieux")
-    ax2.plot(t,sol[:,2],color = "forestgreen")
-    ax2.plot(t,sol[:,3],color = "firebrick")
-    ax2.plot(t,sol[:,4],color = "royalblue")
-    ax1.set_xlabel('Temps')
-    ax1.set_ylabel('Nombre de moustiques')
-    ax2.set_ylabel('Nombre d humains')
     
-#    col = ["springgreen", "lightcoral", "forestgreen","firebrick","royalblue" ]
- #   for i,c in zip([0,1,2,3,4],col) :
- #       ax.plot(t, sol[:, i], color = c,
- #                label='theta(t)')
+    graphe = st.selectbox("Que voulez-vous tracer", ["Dynamique de population", "Incidence"])
+    if (graphe == "Dynamique de population"):
+        
     
-    st.pyplot(fig)
+        fig, ax1 = plt.subplots()
+        ax2 = ax1.twinx()
+        ax1.plot(t,sol[:,0],'g--',label="Moustiques sains")
+        ax1.plot(t,sol[:,1],'r--',label="Moustiques infectieux")
+        ax2.plot(t,sol[:,2],color = "forestgreen")
+        ax2.plot(t,sol[:,3],color = "firebrick")
+        ax2.plot(t,sol[:,4],color = "royalblue")
+        ax1.set_xlabel('Temps')
+        ax1.set_ylabel('Nombre de moustiques')
+        ax2.set_ylabel('Nombre d humains')
+        
+    #    col = ["springgreen", "lightcoral", "forestgreen","firebrick","royalblue" ]
+     #   for i,c in zip([0,1,2,3,4],col) :
+     #       ax.plot(t, sol[:, i], color = c,
+     #                label='theta(t)')
+        
+        st.pyplot(fig)
     
-
+    if (graphe == "Incidence"):
+        n = len(sol)
+        ih = np.zeros(n)
+        #r*Thm*Sm*Ih
+        #r*Tmh*Sh*Im
+        ih[1:(n-1)] = (r*Thm*sol[0:(n-2),2]*sol[0:(n-2),1])/(sol[1:(n-1),3]+sol[1:(n-1),4]+sol[1:(n-1),2])
+        im = np.zeros(n)
+        im[1:(n-1)] = (r*Tmh*sol[0:(n-2),0]*sol[0:(n-2),3])/(sol[1:(n-1),1]+sol[1:(n-1),0])
+        fig, ax = plt.subplots()
+        ax.plot(t[1:(n-2)],ih[1:(n-2)],'b')
+        ax.plot(t[1:(n-2)],im[1:(n-2)],'b--')
+        ax.set_xlabel('Temps')
+        ax.set_ylabel('Incidence')
+        
+        st.pyplot(fig)
+        
 
 if __name__ == "__main__":
     run()
