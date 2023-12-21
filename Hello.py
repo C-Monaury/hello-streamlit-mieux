@@ -78,15 +78,15 @@ def run():
              Moustique
     \left  \{
     \begin{array}{r c l}
-      a_M : taux\ de\ natalité\ du\ moustique \\
-      b_M : taux\ de\ mortalité\ naturelle\ du\ moustique \\
-      t_{HM} : taux\ de\ transmission\ de\ l'homme\ vers\ le\ moustique \\
-      a_H : taux\ de\ natalité\ de\ l'homme \\
-      b_H : taux\ de\ mortalité\ naturelle\ de\ l'homme \\
-      t_{MH} : taux\ de\ transmission\ du\ moustique\ vers\ l'homme \\
-      r & = & \frac{m}{N_H} : avec\ m\ le\ "bitting\ rate" \\
-      \mu : taux\ de\ mortalité\ humaine\ de\ la\ Malaria \\
-      \nu : taux\ de\ guérison\ humain\ de\ la\ Malaria \\ 
+      &a_M : taux\ de\ natalité\ du\ moustique \\
+      &b_M : taux\ de\ mortalité\ naturelle\ du\ moustique \\
+      &t_{HM} : taux\ de\ transmission\ de\ l'homme\ vers\ le\ moustique \\
+      &a_H : taux\ de\ natalité\ de\ l'homme \\
+      &b_H : taux\ de\ mortalité\ naturelle\ de\ l'homme \\
+      &t_{MH} : taux\ de\ transmission\ du\ moustique\ vers\ l'homme \\
+      &r & = & \frac{m}{N_H} : avec\ m\ le\ "bitting\ rate" \\
+      &\mu : taux\ de\ mortalité\ humaine\ de\ la\ Malaria \\
+      &\nu : taux\ de\ guérison\ humain\ de\ la\ Malaria \\ 
    \end{array}
    \right.
              ''' 
@@ -128,3 +128,4 @@ def run():
 
 if __name__ == "__main__":
     run()
+
