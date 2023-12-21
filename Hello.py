@@ -14,15 +14,15 @@
 
 import streamlit as st
 from streamlit.logger import get_logger
+import streamlit.components.v1 as components
 
 import numpy as np
 
 #%matplotlib widget
 import matplotlib.pyplot as plt
 from matplotlib import cm
-import streamlit.components.v1 as components
+
 from scipy.integrate import odeint
-import mpld3
 
 import function as func
 
@@ -179,7 +179,9 @@ def run():
         
         st.pyplot(fig)
         
-
+    st.header("Visualisation 3D : plan de phase")
+    st.subheader("Trajectoires")
+    
     #####
     def gradient_couleurs_bleu_rouge(nombre_de_couleurs):
         # Créer un dégradé de couleur du bleu au rouge
@@ -191,7 +193,7 @@ def run():
     #number = st.number_input(value =10, min_value = 1, max_value = 100, label = 'Insert a number', step =1)
     #couleurs_gradient = gradient_couleurs_bleu_rouge(number)
     y0 = np.array([100, 1, 100, 0, 0])
-    t = np.linspace(0, 1000, 2001)
+    t = np.linspace(0, 2000, 2001)
     fig3d = plt.figure()
     ax3d = fig3d.add_subplot(projection='3d')
     
@@ -199,40 +201,40 @@ def run():
     ax3d.axes.set_ylim3d(bottom=0, top=100) 
     ax3d.axes.set_zlim3d(bottom=0, top=100) 
     
-    on = st.selectbox("L'axes des x represent les :",("sain","guèri"))
+    on = st.selectbox("L'axe des x represent les :",("sains","guéris"))
     if on == "sain" :
         ID = 2
     else :
         ID = 4
 
     
-    names_comp = ["_","_","sain","_", "guèri"]   
+    names_comp = ["_","_","sains","_", "guéris"]   
     
    
     option = st.selectbox(
-        'Choisi une option :',
-        ('Selection des condition initial',
-         'Conditions initials aléatoire'))
+        'Choisis une option :',
+        ('Selection des conditions initials',
+         'Conditions initials aléatoires'))
     
-    if option == 'Selection des condition initial' :
+    if option == 'Selection des conditions initials' :
         st.subheader("Conditions initiales")
         l2col1 ,l2col2 ,l2col3, l2col4 ,l2col5 = st.columns(5)
         
         with l2col1:
-            y0[0] = st.number_input('Moustique sain ', min_value=0, max_value=100,step=1,
+            y0[0] = st.number_input('Moustiques sains ', min_value=0, max_value=100,step=1,
                                   value = 100)
         with l2col2:
-            y0[1] = st.number_input('Moustique infecté ', min_value=0, max_value=100,step=1,
+            y0[1] = st.number_input('Moustiques infectés ', min_value=0, max_value=100,step=1,
                                   value =1)
           
         with l2col3:
-            y0[2] = st.number_input('Humain sain', min_value =0, max_value=100,step=1,
+            y0[2] = st.number_input('Humains sains', min_value =0, max_value=100,step=1,
                                   value =100)
         with l2col4:
-            y0[3] = st.number_input('Humain infecté ', min_value = 0, max_value=100,step=1,
+            y0[3] = st.number_input('Humains infectés ', min_value = 0, max_value=100,step=1,
                                   value =0)
         with l2col5:
-            y0[4] = st.number_input('Humain guéri ', min_value = 0, max_value=100,step=1,
+            y0[4] = st.number_input('Humains guéris ', min_value = 0, max_value=100,step=1,
                                   value =0)
             
         sol2 = odeint(func.ModelMalaria, y0, t, args=(r, am, bm, ah, bh, mu, nu, Thm, Tmh))
@@ -241,10 +243,10 @@ def run():
         z = sol2[:, 1]
         
         ax3d.scatter(x[0], y[0], z[0], zdir='z')
-        ax3d.plot(x, y, z, zdir='z', label='curve in (x, y)')
+        ax3d.plot(x, y, z, zdir='z')
     
     
-    elif option == 'Conditions initials aléatoire':
+    elif option == 'Conditions initials aléatoires':
         n_traj = st.number_input('Nombre de trajectoires', min_value=1, max_value=1000,step=1,
                               value = 1)
     
@@ -262,9 +264,9 @@ def run():
         
     
         
-    ax3d.set_xlabel(f'Humain {names_comp[ID]}')
-    ax3d.set_ylabel('Humain infecter')
-    ax3d.set_zlabel('Moustique infecter')
+    ax3d.set_xlabel(f'Humains {names_comp[ID]}')
+    ax3d.set_ylabel('Humains infectés')
+    ax3d.set_zlabel('Moustiques infectés')
     l3col1 ,l3col2  = st.columns(2)
     with l3col1:
         elev = st.slider('elevation', min_value=-90, max_value=90, value = 20)
@@ -274,10 +276,59 @@ def run():
     ax3d.view_init(elev=elev, azim=azim)
     st.pyplot(fig3d)
     
+
     #components.html(mpld3.fig_to_html(fig3d), height=600)
+    l4col1 ,l4col2   = st.columns(2)
+    with l4col1:
+        max_hs= st.number_input('Borne sup. humains sains', min_value=0, max_value=100,step=1,
+                              value =100)
+    with l4col2:
+        max_hi= st.number_input('Borne sup. humains infectés', min_value=0, max_value=100,step=1,
+                              value =2)
+    with l4col2:
+        max_mi= st.number_input('Borne sup. moustiques infectés', min_value=0, max_value=100,step=1,
+                              value =100)
+    
+    st.subheader("Surface de trajectoires")
+    Y0 = np.zeros((101,5))
+    Y0[:,1] = np.linspace(0,max_mi, 101)
+    Y0[:,2] = np.linspace(0,max_hs, 101)
+    Y0[:,3] = np.linspace(0,max_hi, 101)
+    X = np.zeros((len(t),101))
+    Y = np.zeros((len(t),101))
+    Z = np.zeros((len(t),101))
 
 
 
+    for i in range(np.shape(Y0)[0]) :
+        sol2 = odeint(func.ModelMalaria, Y0[i,:], t, args=(r, am, bm, ah, bh, mu, nu, Thm, Tmh))
+        X[:,i] = sol2[:, 2]
+        Y[:,i] = sol2[:, 3]
+        Z[:,i] = sol2[:, 1]
+        
+    fig3d2 = plt.figure()
+    
+    ax3d2 = fig3d2.add_subplot(projection='3d')
+   
+
+        
+    ax3d2.axes.set_xlim3d(left=0, right=150)
+    ax3d2.axes.set_ylim3d(bottom=0, top=100) 
+    ax3d2.axes.set_zlim3d(bottom=0, top=100) 
+    
+    ax3d2.set_xlabel('Humains sains')
+    ax3d2.set_ylabel('Humains infectés')
+    ax3d2.set_zlabel('Moustiques infectés')
+    ax3d2.plot_wireframe(X, Y, Z)
+    
+    l5col1 ,l5col2   = st.columns(2)
+    with l5col1:
+        elev = st.slider('elevation ', min_value=-90, max_value=90, value = 20)
+    with l5col2:
+        azim = st.slider('azimute ', min_value=-90, max_value=90, value = -40)
+
+    ax3d2.view_init(elev=elev, azim=azim)
+    st.pyplot(fig3d2)
  
     # Plot scatterplot data (20 2D points per colour) on the x and z axes.
     
