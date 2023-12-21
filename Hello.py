@@ -34,6 +34,10 @@ def run():
     st.write("""
     ## Présentation du modèle de MacDonald:
     """)
+ #   st.write("""
+ #   Le modele de MacDonald...
+ #  """)
+    
     
     #équation Homme 
     st.latex(r'''
@@ -59,44 +63,54 @@ def run():
              ''' 
     )
     
-    st.graphviz_chart('''
-    digraph {
-        Homme_sain -> Homme_Malade
-        Homme_Malade -> Homme_Mort
-        Moustique_Sain -> Moustique_Malade
-        Homme_Malade -> Moustique_Sain 
-        Moustique_Malade -> Homme_sain
-        
-    }
-''')
+    st.image('./Schema.png')
+
     #Presentation des parametres
     st.write("""
     ## Présentation des parametres:
     """)
     
     st.latex(r'''
-             Moustique
+             Homme
     \left  \{
-    \begin{array}{r c l}
-      &a_M : taux\ de\ natalité\ du\ moustique \\
-      &b_M : taux\ de\ mortalité\ naturelle\ du\ moustique \\
-      &t_{HM} : taux\ de\ transmission\ de\ l'homme\ vers\ le\ moustique \\
-      &a_H : taux\ de\ natalité\ de\ l'homme \\
-      &b_H : taux\ de\ mortalité\ naturelle\ de\ l'homme \\
-      &t_{MH} : taux\ de\ transmission\ du\ moustique\ vers\ l'homme \\
-      &r & = & \frac{m}{N_H} : avec\ m\ le\ "bitting\ rate" \\
-      &\mu : taux\ de\ mortalité\ humaine\ de\ la\ Malaria \\
-      &\nu : taux\ de\ guérison\ humain\ de\ la\ Malaria \\ 
+    \begin{array}{r c l}&
+      &a_H : taux\ de\ natalité\ de\ l'homme \\&
+      &b_H : taux\ de\ mortalité\ naturelle\ de\ l'homme \\&
+      &a_H = b_H \\
    \end{array}
    \right.
              ''' 
     )
     
+    st.latex(r'''
+          Moustique
+ \left  \{
+ \begin{array}{r c l}&
+   &a_M : taux\ de\ natalité\ du\ moustique \\&
+   &b_M : taux\ de\ mortalité\ naturelle\ du\ moustique \\&
+   &a_M = b_M \\
+\end{array}
+\right.
+          ''' 
+ )
+         
+    st.latex(r'''
+                  Malaria
+         \left  \{
+         \begin{array}{r c l}&
+           &t_{HM} : taux\ de\ transmission\ de\ l'homme\ vers\ le\ moustique \\&
+           &t_{MH} : taux\ de\ transmission\ du\ moustique\ vers\ l'homme \\&
+           &r = \frac{m}{N_H} : avec\ m\ le\ "bitting\ rate" \\&
+           &\mu : taux\ de\ mortalité\ humaine\ de\ la\ Malaria \\&
+           &\nu : taux\ de\ guérison\ humain\ de\ la\ Malaria \\ 
+        \end{array}
+        \right.
+                  ''' 
+         )
     
     
     
-    
-    r, am, bm, ah, bh, mu, nu, Thm, Tmh  = 0.01, 0.01,0.01, 0.03, 0.02, 0.01,0.01, 0.2,0.1
+    r, am, bm, ah, bh, mu, nu, Thm, Tmh  = 0.01, 0.1,0.1, 0.002, 0.002, 0.01,0.01, 0.2,0.1
     
     st.subheader("Paramètres Homme")
     l1col1 ,l1col2 ,l1col3 = st.columns(3)
@@ -105,30 +119,56 @@ def run():
       Thm =st.slider('Transmision Homme moustique', min_value=0.01, max_value=0.99)
       
     with l1col2:
-      ah =st.slider('Taux de croissance Homme', min_value=0.01, max_value=0.99)
+      Tmh =st.slider('Transmission Moustique Homme', min_value=0.01, max_value=0.99)
       
     with l1col3:
-      bh =st.slider('Taux de mortalité ', min_value=0.01, max_value=0.99)
+      mu =st.slider('Mortalité de la malaria ', min_value=0.01, max_value=0.99)
     
     
-    y0 = [2, 100, 100, 0, 0]
+    y0 = [1000, 10, 100, 0, 0]
     t = np.linspace(0, 100, 1001)
     
 
     sol = odeint(func.ModelMalaria, y0, t, args=(r, am, bm, ah, bh, mu, nu, Thm, Tmh))
-    fig, ax = plt.subplots()
-    col = ["cornflowerblue", "crimson", "royalblue","firebrick","gray" ]
-    names_compart = ["Sm", "Im", "Sh", "Ih", "Rh"]
-    for i,c in zip([0,1,2,3,4],col) :
-      
-        ax.plot(t, sol[:, i], color = c,
-                 label= names_compart[i])
     
-    ax .legend(loc = 0)
+    graphe = st.selectbox("Que voulez-vous tracer", ["Dynamique de population", "Incidence"])
+    if (graphe == "Dynamique de population"):
+        
     
-    st.pyplot(fig)
+        fig, ax1 = plt.subplots()
+        ax2 = ax1.twinx()
+        ax1.plot(t,sol[:,0],'g--',label="Moustiques sains")
+        ax1.plot(t,sol[:,1],'r--',label="Moustiques infectieux")
+        ax2.plot(t,sol[:,2],color = "forestgreen")
+        ax2.plot(t,sol[:,3],color = "firebrick")
+        ax2.plot(t,sol[:,4],color = "royalblue")
+        ax1.set_xlabel('Temps')
+        ax1.set_ylabel('Nombre de moustiques')
+        ax2.set_ylabel('Nombre d humains')
+        
+    #    col = ["springgreen", "lightcoral", "forestgreen","firebrick","royalblue" ]
+     #   for i,c in zip([0,1,2,3,4],col) :
+     #       ax.plot(t, sol[:, i], color = c,
+     #                label='theta(t)')
+        
+        st.pyplot(fig)
     
-
+    if (graphe == "Incidence"):
+        n = len(sol)
+        ih = np.zeros(n)
+        #r*Thm*Sm*Ih
+        #r*Tmh*Sh*Im
+        ih[1:(n-1)] = (r*Thm*sol[0:(n-2),2]*sol[0:(n-2),1])/(sol[1:(n-1),3]+sol[1:(n-1),4]+sol[1:(n-1),2])
+        im = np.zeros(n)
+        im[1:(n-1)] = (r*Tmh*sol[0:(n-2),0]*sol[0:(n-2),3])/(sol[1:(n-1),1]+sol[1:(n-1),0])
+        fig, ax = plt.subplots()
+        ax.plot(t[1:(n-2)],ih[1:(n-2)],'b')
+        ax.plot(t[1:(n-2)],im[1:(n-2)],'b--')
+        ax.set_xlabel('Temps')
+        ax.set_ylabel('Incidence')
+        
+        st.pyplot(fig)
+        
 
 if __name__ == "__main__":
     run()
