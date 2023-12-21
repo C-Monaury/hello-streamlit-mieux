@@ -106,7 +106,7 @@ def run():
     
     
     
-    r, am, bm, ah, bh, mu, nu, Thm, Tmh  = 0.01, 0.1,0.1, 0.02, 0.02, 0.01,0.01, 0.2,0.1
+    r, am, bm, ah, bh, mu, nu, Thm, Tmh  = 0.01, 0.1,0.1, 0.002, 0.002, 0.01,0.01, 0.2,0.1
     
     st.subheader("Paramètres Homme")
     l1col1 ,l1col2 ,l1col3 = st.columns(3)
@@ -126,11 +126,21 @@ def run():
     
 
     sol = odeint(func.ModelMalaria, y0, t, args=(r, am, bm, ah, bh, mu, nu, Thm, Tmh))
-    fig, ax = plt.subplots()
-    col = ["springgreen", "lightcoral", "forestgreen","firebrick","royalblue" ]
-    for i,c in zip([0,1,2,3,4],col) :
-        ax.plot(t, sol[:, i], color = c,
-                 label='theta(t)')
+    fig, ax1 = plt.subplots()
+    ax2 = ax1.twinx()
+    ax1.plot(t,sol[:,0],'g--',label="Moustiques sains")
+    ax1.plot(t,sol[:,1],'r--',label="Moustiques infectieux")
+    ax2.plot(t,sol[:,2],color = "forestgreen")
+    ax2.plot(t,sol[:,3],color = "firebrick")
+    ax2.plot(t,sol[:,4],color = "royalblue")
+    ax1.set_xlabel('Temps')
+    ax1.set_ylabel('Nombre de moustiques')
+    ax2.set_ylabel('Nombre d humains')
+    
+#    col = ["springgreen", "lightcoral", "forestgreen","firebrick","royalblue" ]
+ #   for i,c in zip([0,1,2,3,4],col) :
+ #       ax.plot(t, sol[:, i], color = c,
+ #                label='theta(t)')
     
     st.pyplot(fig)
     
