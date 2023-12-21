@@ -40,9 +40,9 @@ def run():
              Homme
     \left  \{
     \begin{array}{r c l}
-      S_H  & = & a_H*N_H - b_H*S_H - r*T_H*S_H*I_M \\
-      I_H   & = & r*T_H*S_H*I_M - (b + \mu + \nu)*I_H \\
-      R_H & = & \nu*I_H-b_H*R_H
+      \frac{S_H}{dt}  & = & a_H\cdot N_H - b_H\cdot S_H - r\cdot t_{MH}\cdot S_H\cdot I_M \\
+      \frac{I_H}{dt}   & = & r\cdot t_{MH}\cdot S_H\cdot I_M - (b + \mu + \nu)\cdot I_H \\
+      \frac{R_H}{dt} & = & \nu\cdot I_H-b_H\cdot R_H
    \end{array}
    \right.
              ''' 
@@ -52,8 +52,8 @@ def run():
              Moustique
     \left  \{
     \begin{array}{r c l}
-      S_M  & = & a_M*N_M - b_M*S_M - r*T_M*S_M*I_H \\
-      I_M   & = & r*T_M*S_M*I_H - b_M*I_M \\
+      \frac{S_M}{dt} & = & a_M\cdot N_M - b_M\cdot S_M - r\cdot t_{HM}\cdot S_M\cdot I_H \\
+      \frac{I_M}{dt} & = & r\cdot t_{HM}\cdot S_M\cdot I_H - b_M\cdot I_M \\
    \end{array}
    \right.
              ''' 
@@ -69,12 +69,34 @@ def run():
         
     }
 ''')
+    #Presentation des parametres
+    st.write("""
+    ## Présentation des parametres:
+    """)
+    
+    st.latex(r'''
+             Moustique
+    \left  \{
+    \begin{array}{r c l}
+      a_M : taux\ de\ natalité\ du\ moustique \\
+      b_M : taux\ de\ mortalité\ naturelle\ du\ moustique \\
+      t_{HM} : taux\ de\ transmission\ de\ l'homme\ vers\ le\ moustique \\
+      a_H : taux\ de\ natalité\ de\ l'homme \\
+      b_H : taux\ de\ mortalité\ naturelle\ de\ l'homme \\
+      t_{MH} : taux\ de\ transmission\ du\ moustique\ vers\ l'homme \\
+      r & = & \frac{m}{N_H} : avec\ m\ le\ "bitting\ rate" \\
+      \mu : taux\ de\ mortalité\ humaine\ de\ la\ Malaria \\
+      \nu : taux\ de\ guérison\ humain\ de\ la\ Malaria \\ 
+   \end{array}
+   \right.
+             ''' 
+    )
     
     
     
     
     
-    r, am, bm, ah, bh, mu, nu, Thm, Tmh  = 0.01, 0.01,0.02, 0.03, 0.02, 0.01,0.01, 0.2,0.1
+    r, am, bm, ah, bh, mu, nu, Thm, Tmh  = 0.01, 0.01,0.01, 0.03, 0.02, 0.01,0.01, 0.2,0.1
     
     st.subheader("Paramètres Homme")
     l1col1 ,l1col2 ,l1col3 = st.columns(3)
