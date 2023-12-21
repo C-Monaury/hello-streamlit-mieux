@@ -96,9 +96,13 @@ def run():
     sol = odeint(func.ModelMalaria, y0, t, args=(r, am, bm, ah, bh, mu, nu, Thm, Tmh))
     fig, ax = plt.subplots()
     col = ["cornflowerblue", "crimson", "royalblue","firebrick","gray" ]
+    names_compart = ["Sm", "Im", "Sh", "Ih", "Rh"]
     for i,c in zip([0,1,2,3,4],col) :
+      
         ax.plot(t, sol[:, i], color = c,
-                 label='theta(t)')
+                 label= names_compart[i])
+    
+    ax .legend(loc = 0)
     
     st.pyplot(fig)
     
