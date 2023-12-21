@@ -16,8 +16,13 @@ import streamlit as st
 from streamlit.logger import get_logger
 
 import numpy as np
+
+#%matplotlib widget
 import matplotlib.pyplot as plt
+from matplotlib import cm
+import streamlit.components.v1 as components
 from scipy.integrate import odeint
+import mpld3
 
 import function as func
 
@@ -112,7 +117,7 @@ def run():
     
     
     y0 = [2, 100, 100, 0, 0]
-    t = np.linspace(0, 100, 1001)
+    t = np.linspace(0, 1000, 2001)
     
 
     sol = odeint(func.ModelMalaria, y0, t, args=(r, am, bm, ah, bh, mu, nu, Thm, Tmh))
@@ -128,7 +133,103 @@ def run():
     
     st.pyplot(fig)
     
+    #####
+    def gradient_couleurs_bleu_rouge(nombre_de_couleurs):
+        # Créer un dégradé de couleur du bleu au rouge
+        colormap = plt.cm.get_cmap('RdYlBu')  # Choisir une colormap allant du rouge au bleu
+        couleurs = [colormap(i) for i in np.linspace(0, 1, nombre_de_couleurs)]
 
+        return couleurs
+    
+    #number = st.number_input(value =10, min_value = 1, max_value = 100, label = 'Insert a number', step =1)
+    #couleurs_gradient = gradient_couleurs_bleu_rouge(number)
+    y0 = np.array([100, 1, 100, 0, 0])
+
+    fig3d = plt.figure()
+    ax3d = fig3d.add_subplot(projection='3d')
+    
+    ax3d.axes.set_xlim3d(left=0, right=100)
+    ax3d.axes.set_ylim3d(bottom=0, top=100) 
+    ax3d.axes.set_zlim3d(bottom=0, top=100) 
+
+    st.subheader("Paramètres Homme")
+    option = st.selectbox(
+        'Test',
+        ('Selection des condition initial',
+         'Conditions initials aléatoire'))
+    if option == 'Selection des condition initial' :
+        l2col1 ,l2col2 ,l2col3, l2col4 ,l2col5 = st.columns(5)
+        
+        with l2col1:
+            y0[0] = st.number_input('Moustique sain ', min_value=0, max_value=100,step=1,
+                                  value = 100)
+        with l2col2:
+            y0[1] = st.number_input('Moustique infecté ', min_value=0, max_value=100,step=1,
+                                  value =1)
+          
+        with l2col3:
+            y0[2] = st.number_input('Humain sain', min_value =0, max_value=100,step=1,
+                                  value =100)
+        with l2col4:
+            y0[3] = st.number_input('Humain infecté ', min_value = 0, max_value=100,step=1,
+                                  value =0)
+        with l2col5:
+            y0[4] = st.number_input('Humain guéri ', min_value = 0, max_value=100,step=1,
+                                  value =0)
+            
+        sol2 = odeint(func.ModelMalaria, y0, t, args=(r, am, bm, ah, bh, mu, nu, Thm, Tmh))
+        x = sol2[:, 2]
+        y = sol2[:, 4]
+        z = sol2[:, 1]
+        
+        ax3d.scatter(x[0], y[0], z[0], zdir='z')
+        ax3d.plot(x, y, z, zdir='z', label='curve in (x, y)')
+    
+    
+    elif option == 'Conditions initials aléatoire':
+        n_traj = st.number_input('Nombre de trajectoires', min_value=1, max_value=1000,step=1,
+                              value = 1)
+    
+        Y0 = np.random.randint(100, size=(n_traj, 5))
+        colors_line =  gradient_couleurs_bleu_rouge(n_traj)
+    # Plot a sin curve using the x and y axes.
+        for i in range(np.shape(Y0)[0]) :
+            sol2 = odeint(func.ModelMalaria, Y0[i,:], t, args=(r, am, bm, ah, bh, mu, nu, Thm, Tmh))
+            x = sol2[:, 2]
+            y = sol2[:, 4]
+            z = sol2[:, 1]
+            
+            ax3d.scatter(x[0], y[0], z[0], zdir='z', color = colors_line[i])
+            ax3d.plot(x, y, z, zdir='z', label='curve in (x, y)', color = colors_line[i])
+        
+    
+        
+    ax3d.set_xlabel('Humain sain')
+    ax3d.set_ylabel('Humain infecter')
+    ax3d.set_zlabel('Moustique infecter')
+    
+    elev = st.slider('elevation', min_value=-90, max_value=90, value = 20)
+    azim = st.slider('azimute', min_value=-90, max_value=90, value = -35)
+    
+    ax3d.view_init(elev=elev, azim=azim)
+    st.pyplot(fig3d)
+    #components.html(mpld3.fig_to_html(fig3d), height=600)
+
+
+
+ 
+    # Plot scatterplot data (20 2D points per colour) on the x and z axes.
+    
+    # ax.scatter(x, y, zs=0, zdir='y', c=c_list, label='points in (x, z)')
+    
+    # Make legend, set axes limits and labels
+
+    
+    # Customize the view angle so it's easier to see that the scatter points lie
+    # on the plane y=0
+    #ax3d.view_init(elev=20., azim=-35, roll=0)
+    
+    
 
 if __name__ == "__main__":
     run()
