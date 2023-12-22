@@ -1,13 +1,13 @@
 
 
-from typing import Any
-from scipy.integrate import odeint
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
+#from typing import Any
+#from scipy.integrate import odeint
+#import numpy as np
+#import pandas as pd
+#import matplotlib.pyplot as plt
 
-import streamlit as st
-import function as func
+#import streamlit as st
+#import function as func
 from streamlit.hello.utils import show_code
 
 
