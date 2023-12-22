@@ -16,15 +16,15 @@ import streamlit as st
 from streamlit.logger import get_logger
 import streamlit.components.v1 as components
 
-#import numpy as np
+import numpy as np
 
 #%matplotlib widget
-#import matplotlib.pyplot as plt
-#from matplotlib import cm
+import matplotlib.pyplot as plt
+from matplotlib import cm
 
-#from scipy.integrate import odeint
+from scipy.integrate import odeint
 
-#import function as func
+import function as func
 
 
 
