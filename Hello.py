@@ -46,7 +46,7 @@ def run():
     
     #équation Homme 
     st.latex(r'''
-             Homme
+             Humain
     \left  \{
     \begin{array}{r c l}
       \frac{S_H}{dt}  & = & a_H\cdot N_H - b_H\cdot S_H - r\cdot t_{MH}\cdot S_H\cdot I_M \\
@@ -76,7 +76,7 @@ def run():
     """)
     
     st.latex(r'''
-             Homme
+             Humain
     \left  \{
     \begin{array}{r c l}&
       &a_H : taux\ de\ natalité\ de\ l'homme \\&
@@ -117,14 +117,14 @@ def run():
     
     r, am, bm, ah, bh, mu, nu, Thm, Tmh  = 0.01, 0.1,0.1, 0.002, 0.002, 0.01,0.01, 0.2,0.1
     
-    st.subheader("Paramètres Homme")
+    st.subheader("Paramètres Humains")
     l1col1 ,l1col2 ,l1col3 = st.columns(3)
     
     with l1col1:
-      Thm =st.slider('Transmision Homme moustique', min_value=0.01, max_value=0.99)
+      Thm =st.slider('Transmision Humain moustique', min_value=0.01, max_value=0.99)
       
     with l1col2:
-      Tmh =st.slider('Transmission Moustique Homme', min_value=0.01, max_value=0.99)
+      Tmh =st.slider('Transmission Moustique Humain', min_value=0.01, max_value=0.99)
       
     with l1col3:
       mu =st.slider('Mortalité de la malaria ', min_value=0.01, max_value=0.99)
@@ -343,3 +343,7 @@ def run():
     
    
 
+from Hello import run
+
+if __name__ == "__main__":
+    run()

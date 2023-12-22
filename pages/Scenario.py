@@ -14,27 +14,27 @@ import time
 
 
 
-st.title("Prévisions du futur")
-st.write("Dans cette selection nous allons tester différents scénarios pour lutter contre notre maladie")
+st.title("Modélisations scénarios")
+st.write("Dans cette section nous allons tester différents scénarios pour lutter contre la malaria")
 
 
 option = st.selectbox(
-    'Quelle scéanrio veux tu tester ?',
+    'Quel scénario veux tu tester ?',
     ( 'Réduction population de moustique', 'Améliorations des soins et prévention'))
 st.write('You selected:', option)
 
 if st.button("Affichage paramètre"):
     data ={
         "Paramètres":  ["r", "am", "bm", "ah", "bh", "mu", "nu",  "Tmh","Thm" ,"Sm", "Im", "Sh", "Ih", "Rh"],
-        "Valeurs" : [0.01, 0.015,0.01, 0.03, 0.03, 0.01,0.01, 0.1,0.02,100, 2, 100, 0, 0]
+        "Valeurs" : [0.01, 0.015,0.015, 0.03, 0.03, 0.008,0.01, 0.1,0.02,100, 2, 100, 0, 0]
     }
     df = pd.DataFrame(data)
     st.table(df)
 
 
 
-r, am, bm, ah, bh, mu, nu,  Tmh,Thm  = 0.01, 0.015,0.01, 0.03, 0.02, 0.01,0.01, 0.1,0.02
-Sm, Im, Sh, Ih, Rh =  100, 2, 100, 0, 0
+r, am, bm, ah, bh, mu, nu,  Tmh,Thm  = 0.01, 0.1,0.1, 0.003, 0.002, 0.001,0.001, 0.2,0.1
+Sm, Im, Sh, Ih, Rh =  1000, 10, 100, 0, 0
 Nm = Im +Sm
 Nh = Ih + Sh + Rh
 m = r/Nh
@@ -60,7 +60,7 @@ if option == 'Réduction population de moustique':
     ax.set_ylabel('R0')
     st.pyplot(fig)
     
-    calc=st.button("Population de moustique au R0 à 1")
+    calc=st.button("Population de moustique au R0 = 1")
     if calc == True:
         with st.spinner('Wait for it...'):
             time.sleep(0.5)
@@ -75,7 +75,7 @@ if option == 'Réduction population de moustique':
       eff =st.slider("Pourcentage d'efficacité du traitement",min_value=0, max_value=100, step=1)
       
     with l1col2:
-      nbr = st.slider("Nombre de traitement", min_value=1, max_value=10, step=1)
+      nbr = st.slider("Nombre de traitements", min_value=1, max_value=10, step=1)
     
     eff = 1 - eff/100
     
@@ -165,27 +165,24 @@ if option == 'Améliorations des soins et prévention':
     
    
     
-    t = np.linspace(0, 1000, 1000)
+    t = np.linspace(0, 100, 1001)
    
-    y0 = [100, 2, 100, 0, 0]
-    sol = odeint(func.ModelMalaria, y0, t, args=(r, am, bm, ah, bh, mu, nu, Thm, Tmh))
+    y0 = [1000, 10, 100, 0, 0]
+    #Sm, Im, Sh, Ih, Rh
+    sol4 = odeint(func.ModelMalaria, y0, t, args=(r, am, bm, ah, bh, mu, nu, Thm, Tmh))
         
-        
     
-    
-    
-    
-    fig2, ax1 = plt.subplots()
+    fig3, ax1 = plt.subplots()
     ax2 = ax1.twinx()
-    ax1.plot(t,sol[:,0],'g--',label="Moustiques sains")
-    ax1.plot(t,sol[:,1],'r--',label="Moustiques infectieux")
-    ax2.plot(t,sol[:,2],color = "forestgreen")
-    ax2.plot(t,sol[:,3],color = "firebrick")
-    ax2.plot(t,sol[:,4],color = "royalblue")
+    ax1.plot(t,sol4[:,0],'g--',label="Moustiques sains")
+    ax1.plot(t,sol4[:,1],'r--',label="Moustiques infectieux")
+    ax2.plot(t,sol4[:,2],color = "forestgreen")
+    ax2.plot(t,sol4[:,3],color = "firebrick")
+    ax2.plot(t,sol4[:,4],color = "royalblue")
     ax1.set_xlabel('Temps')
     ax1.set_ylabel('Nombre de moustiques')
     ax2.set_ylabel('Nombre d humains')
-    st.pyplot(fig2)
+    st.pyplot(fig3)
     
     
     
