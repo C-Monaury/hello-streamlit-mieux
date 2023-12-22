@@ -341,9 +341,5 @@ def run():
     # on the plane y=0
     #ax3d.view_init(elev=20., azim=-35, roll=0)
     
-    
-
-
-if __name__ == "__main__":
-    run()
+   
 
