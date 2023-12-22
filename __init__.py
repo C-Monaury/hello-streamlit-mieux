@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
  
-from Hello import run
+#from Presentation import run
 
-if __name__ == "__main__":
-    run()
+#if __name__ == "__main__":
+#    run()
